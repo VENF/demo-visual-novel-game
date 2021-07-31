@@ -1,0 +1,65 @@
+.box-container {
+  border: 3px solid #404560;
+  border-radius: 15px;
+  margin: 50px;
+  position: relative;
+  background: #14151f;
+  display: flex;
+  flex-flow: column;
+}
+.loader {
+  animation-name: loader;
+  animation-duration: 2s;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+}
+
+.box-container_speaker {
+  border: 1px solid purple;
+  height: 50px;
+  width: 20%;
+  opacity: 0;
+  position: absolute;
+}
+.box-container_text {
+  height: 70%;
+}
+.box-container_text p {
+  padding: 20px 30px;
+  font-size: 1.5em;
+  color: #fff;
+}
+.box-container button {
+  height: 40px;
+  width: 150px;
+  font-size: 1.3rem;
+  border-radius: 5px;
+  border: none;
+  background: #569b51;
+  color: #fff;
+  cursor: pointer;
+  align-self: flex-end;
+  margin: 0px 30px;
+  margin-top: 10px;
+}
+
+.box-container button svg {
+  width: 100%;
+  height: 40px;
+  color: #fff;
+  stroke-width: 2px;
+  transition: all ease 0.3s;
+}
+
+.box-container button svg:hover {
+  transform: translateX(10px);
+}
+
+@keyframes loader {
+  from {
+    transform: rotate(0deg)
+  }
+  to {
+    transform:rotate(190deg)
+  }
+}

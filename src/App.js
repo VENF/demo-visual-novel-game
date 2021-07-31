@@ -4,7 +4,7 @@ function App() {
   return (
     <div className="App">
       <Switch>
-        {routes.map(({ path, key, page }) => (
+        {routes.map(({ path, key, page}) => (
           <Route exact key={key} path={path} component={page} />
         ))}
       </Switch>
