@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import { useHistory } from "react-router-dom"
+import Options from "../Options/Options";
 import "./boxOfText.css";
 
 const Loader = () => {
@@ -54,18 +56,26 @@ const Next = () => {
 };
 
 const BoxOfText = ({
-  text = "",
-  delay = 0,
-  duration = 0,
-  speaker = "Levi",
+  data,
+  speaker = "some speaker",
   width = "600px",
   height = "250px",
 }) => {
-  const [ textArray ] = useState(text.split(""));
+  const { root } = data;
+  const history = useHistory()
+  const [ShowOptions, setShowOptions] = useState(false);
+
+  const [text, setText] = useState(root.text);
+
+  const [questions, setQuestions] = useState(root.questions);
+  const [position, setPosition] = useState(0);
+  const [currentText, setCurrentText] = useState(text[position].split(""));
+  const [endOfText, setEndOfText] = useState(false);
   const [textState, setTextState] = useState({
     key: 0,
-    length: textArray.length,
+    length: currentText.length,
     text: "",
+    redirect: ""
   });
 
   useEffect(() => {
@@ -74,20 +84,79 @@ const BoxOfText = ({
         setTextState((pre) => ({
           ...textState,
           key: pre.key + 1,
-          text: !textArray[pre.key] ? pre.text : pre.text + textArray[pre.key],
+          text: !currentText[pre.key]
+            ? pre.text
+            : pre.text + currentText[pre.key],
         }));
-      }, 200);
+      }, 50);
+    } else {
+      setEndOfText(true);
     }
-  }, [textState, textArray]);
+  }, [textState, currentText]);
+
+  const handlerText = () => {
+    let catchPosition = position;
+    let catchCurrentText = [];
+    if (setEndOfText) {
+      if (position < text.length - 1) {
+        setPosition((pre) => pre + 1);
+        catchPosition = catchPosition + 1;
+        setCurrentText(text[catchPosition].split(""));
+        catchCurrentText = text[catchPosition].split("");
+        setTextState({
+          ...textState,
+          key: 0,
+          length: catchCurrentText.length,
+          text: "",
+        });
+        setEndOfText(false);
+      } else {
+        if(Object.keys(questions).length > 0) {
+          setShowOptions(true);
+        } else {
+          history.push(textState.redirect)
+        }
+      }
+    }
+  };
+
+  const handlerValueOptions = (item) => {
+    let catchPosition = 0;
+    setPosition(catchPosition);
+    setText(item.response);
+    setCurrentText(item.response[catchPosition].split(""));
+    setTextState({
+      key: 0,
+      length: item.response[catchPosition].length,
+      text: "",
+      redirect: item.redirect
+    });
+    if(item.questions) {
+      setQuestions(item.questions)
+    } else {
+      if(item.end) {
+        setQuestions([])
+      }
+    }
+    setShowOptions((pre) => !pre);
+  };
 
   return (
     <div style={{ width: width, height: height }} className="box-container">
-      <div className="box-container_speaker">speaker</div>
+      <div className="box-container_speaker">{speaker}</div>
       <div className="box-container_text">
-        <p> {textState.text} </p>
+        {!ShowOptions ? (
+          <p> {textState.text}</p>
+        ) : (
+          <Options
+            handlerValueOptions={handlerValueOptions}
+            options={questions}
+          />
+        )}
       </div>
-      <button>
-        <Next />
+      <button onClick={endOfText ? handlerText : null}>
+        {endOfText && <Next />}
+        {!endOfText && <Loader />}
       </button>
     </div>
   );

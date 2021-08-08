@@ -1,0 +1,6 @@
+.home {
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    height: 100vh;
+}
