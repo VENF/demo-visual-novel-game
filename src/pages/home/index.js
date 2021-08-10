@@ -1,12 +1,15 @@
 import React from "react";
-import BoxOfText from "../../components/Box/BoxOfText";
-import { data } from "./data"
+import Audio from "../../components/Audio/Audio"
+import soundBg from "../../sound.mp3"
+import GetName from "../../components/getName/getName"
+import "./home.css";
 
-import "./style.css"
+
 const home = () => {
   return (
     <div className="home">
-      <BoxOfText data={data} />
+      <Audio link={soundBg} />
+      <GetName redirect="/otra"/>
     </div>
   );
 };
